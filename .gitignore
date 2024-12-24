@@ -1,0 +1,15 @@
+.vs
+.utmp
+Library/
+Temp/
+Logs/
+obj/
+Assets/QFramework/
+Assets/QFrameworkData/
+UserSettings/
+UserSettings/Layouts/
+ProjectSettings/
+*.csproj
+*.sln
+*.vsconfig
+
