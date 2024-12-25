@@ -7,11 +7,9 @@ using UnityEngine;
 
 
 [RequireComponent(typeof(UITable))]
-public class BaseView : MainController
+public class BaseView : UIPanel,IController
 {
-    protected bool isRemove = false;
-    protected new string name;
-
+    
     protected Dictionary<string, UIComponent> uiComponents;
     protected virtual void Awake()
     {
@@ -20,26 +18,24 @@ public class BaseView : MainController
         uiComponents = uITable.uiComponents;
     }
 
-    public virtual void SetActive(bool active)
+    protected override void OnShow()
     {
-        gameObject.SetActive(active);
+       
     }
 
-    public virtual void OpenPanel(string name)
+    protected override void OnHide()
     {
-        this.name = name;
-        SetActive(true);
+       
     }
 
-    public virtual void ClosePanel()
+    protected override void OnClose()
     {
-        isRemove = true;
-        SetActive(false);
-        Destroy(gameObject);
-        //if (UIManager.Instance.panelDict.ContainsKey(name))
-        //{
-        //    UIManager.Instance.panelDict.Remove(name);
-        //}
-
+       
     }
+
+    IArchitecture IBelongToArchitecture.GetArchitecture()
+    {
+        return MainInit.Interface;
+    }
+
 }

@@ -22,6 +22,6 @@ public class MainView : BaseView
 
     void ButtonClick()
     {
-        Debug.Log("Listener µÄ·½·¨£¡");
+        this.Hide();
     }
 }
