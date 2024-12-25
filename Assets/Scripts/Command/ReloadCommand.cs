@@ -8,6 +8,6 @@ public class ReloadCommand : AbstractCommand
 {
     protected override void OnExecute()
     {
-        this.GetSystem<IMatchSystem>().GenerateBlocks(GlobalConfig.GridWidth, GlobalConfig.GridWidth);
+       this.GetSystem<IMatchSystem>().GenerateBlocks(GlobalConfig.GridWidth, GlobalConfig.GridWidth);
     }
 }

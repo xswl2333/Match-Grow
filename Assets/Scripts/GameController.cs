@@ -6,7 +6,10 @@ public class GameController : MonoBehaviour, ISingleton
 
     private RectTransform UICanvas;
     private Camera UICamera;
-    public RectTransform GameRoot;
+    public Transform GameRoot;
+
+    public static GameController Instance => MonoSingletonProperty<GameController>.Instance;
+
 
     void ISingleton.OnSingletonInit()
     {

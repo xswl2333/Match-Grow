@@ -9,3 +9,9 @@ public enum BlockEnum
     Purple,
     Pink,
 }
+
+public enum BlockState
+{
+    Empty,
+    Slime
+}

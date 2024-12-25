@@ -13,11 +13,14 @@ public class MainView : BaseView
     {
         uiComponents["StartGame"].button.onClick.AddListener(StartGame);
         uiComponents["ResetGame"].button.onClick.AddListener(ButtonClick);
+
+        this.GetSystem<IMatchSystem>().SetParentObject(GameController.Instance.GameRoot);
     }
 
     void StartGame()
     {
         this.SendCommand<ReloadCommand>();
+        this.Hide();
     }
 
     void ButtonClick()

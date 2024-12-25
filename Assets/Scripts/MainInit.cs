@@ -10,6 +10,5 @@ public class MainInit : Architecture<MainInit>
     {
         this.RegisterSystem<IMatchSystem>(new MatchSystem());
         this.RegisterSystem<IResourceLoadSystem>(new ResourceLoadSystem());        
-        this.RegisterModel<IBlockModel>(new BlockModel());
     }
 }

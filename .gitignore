@@ -6,6 +6,10 @@ Logs/
 obj/
 Assets/QFramework/
 Assets/QFrameworkData/
+Assets/DOTween/
+Assets/DOTween.meta
+Assets/Resources/DOTweenSettings.asset
+Assets/Resources/DOTweenSettings.asset.meta
 UserSettings/
 UserSettings/Layouts/
 ProjectSettings/
