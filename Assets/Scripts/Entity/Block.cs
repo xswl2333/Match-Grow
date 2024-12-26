@@ -8,7 +8,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 
-public class Block : MonoBehaviour
+public class Block : Entity<Block>
 {
     public BlockEnum BlockType { get; private set; }
     public BlockState BlockState { get; private set; }
@@ -29,34 +29,34 @@ public class Block : MonoBehaviour
     }
 
 
-    public void OnMouseEnter()
-    {
-        isOver = true;
-        print("进入");
-    }
+    //public void OnMouseEnter()
+    //{
+    //    isOver = true;
+    //    print("进入");
+    //}
 
-    //当鼠标离开UI
-    public void OnMouseExit()
-    {
-        print("移出");
-        isOver = false;
-    }
+    ////当鼠标离开UI
+    //public void OnMouseExit()
+    //{
+    //    print("移出");
+    //    isOver = false;
+    //}
 
-    public void Update()
-    {
-        if (isOver && this.BlockState == BlockState.Slime && !isShow)
-        {
-            //SlimeView panel = (SlimeView)UIManager.Instance.OpenPanel(UIConst.SlimeView);
-            //panel.SetSlimeData(this.m_slime.m_data);
-            isShow = true;
-        }
-        else if (!isOver && isShow)
-        {
-            //UIManager.Instance.ClosePanel(UIConst.SlimeView);
-            isShow = false;
-        }
+    //public void Update()
+    //{
+    //    if (isOver && this.BlockState == BlockState.Slime && !isShow)
+    //    {
+    //        //SlimeView panel = (SlimeView)UIManager.Instance.OpenPanel(UIConst.SlimeView);
+    //        //panel.SetSlimeData(this.m_slime.m_data);
+    //        isShow = true;
+    //    }
+    //    else if (!isOver && isShow)
+    //    {
+    //        //UIManager.Instance.ClosePanel(UIConst.SlimeView);
+    //        isShow = false;
+    //    }
 
-    }
+    //}
 
     public void Create(BlockEnum BlockType, int x, int y, BlockState state = BlockState.Empty)
     {
@@ -157,17 +157,14 @@ public class Block : MonoBehaviour
 
     public void OnClick()
     {
-        //MatchManager.Instance.PushSelectBlock(this.gameObject);
+        //this.SendCommand(new ExchangeCommand(this.gameObject));
         Debug.Log($"m_x{m_x}**m_y{m_y}");
 
     }
 
     public void CheckAroundBoom()
     {
-        //MatchManager.Instance.ClearData();
-        //MatchManager.Instance.FillSameItemsList(this);
-        //MatchManager.Instance.FillBoomList(this);
-
+        this.SendCommand(new CheckMatchCommand(this));
     }
 
     public void DestroyBlock()
@@ -211,6 +208,5 @@ public class Block : MonoBehaviour
         Gizmos.DrawCube(transform.position, Vector3.one);
         Gizmos.color = color;
     }
-
 
 }
