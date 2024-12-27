@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using UnityEditor.U2D.Path.GUIFramework;
 using UnityEngine;
 
-public class ExchangeCommand : AbstractCommand
+public class ClickBlockCommand : AbstractCommand
 {
     //private readonly Block block;
     private readonly GameObject block;
 
-    public ExchangeCommand(GameObject block)
+    public ClickBlockCommand(GameObject block)
     {
         this.block = block;
     }

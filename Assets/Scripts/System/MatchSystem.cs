@@ -33,10 +33,6 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     public bool isOperation = false;
 
-    public class CoroutineBehaviour : MonoBehaviour
-    {
-
-    }
 
     protected override void OnInit()
     {
@@ -350,12 +346,21 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
         this.RemoveMatchBlock();
         ////延迟0.2秒
+        ActionKit.Delay(0.2f, () =>
+        {
+            Debug.Log("End Time:" + Time.time);
+
+        });
         //yield return new WaitForSeconds(0.2f);
         ////开启下落
-        BlocksDrop();
         ////延迟0.38秒
         //yield return new WaitForSeconds(0.38f);
+        BlocksDrop();
+        ActionKit.Delay(0.38f, () =>
+        {
+            Debug.Log("End Time:" + Time.time);
 
+        });
     }
 
 
@@ -402,50 +407,47 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
         //yield return new WaitForSeconds(0.2f);
 
-        //CreateNewBlock();
+        CreateNewBlock();
         //yield return new WaitForSeconds(0.2f);
         MatchAllBlock();
     }
 
 
-    //public void CreateNewBlock()
-    //{
-    //    isOperation = true;
-    //    for (int i = 0; i < GlobalConfig.GridWidth; i++)
-    //    {
-    //        int count = 0;
-    //        Queue<GameObject> newItemQueue = new Queue<GameObject>();
-    //        for (int j = 0; j < GlobalConfig.GridWidth; j++)
-    //        {
-    //            if (GetBlockByIndex(i, j) == null)
-    //            {
-    //                Vector3 pos = new Vector3(i * GlobalConfig.GapWidth, -j * GlobalConfig.GapWidth, 0);
-    //                Vector3 localPos = this.parentObject.transform.TransformPoint(pos);//转换相对坐标
+    public void CreateNewBlock()
+    {
+        isOperation = true;
+        for (int i = 0; i < GlobalConfig.GridWidth; i++)
+        {
+            int count = 0;
+            Queue<GameObject> newItemQueue = new Queue<GameObject>();
+            for (int j = 0; j < GlobalConfig.GridWidth; j++)
+            {
+                if (GetBlockByIndex(i, j) == null)
+                {
+                    Vector3 pos = new Vector3(i * GlobalConfig.GapWidth, -j * GlobalConfig.GapWidth, 0);
+                    Vector3 localPos = this.parentTransform.TransformPoint(pos);//转换相对坐标
 
-    //                GameObject block = BasicPool.Instance.PopBlock();
-    //                block.transform.SetParent(this.parentObject.transform);
-    //                block.transform.SetPositionAndRotation(localPos, Quaternion.identity);
+                    GameObject block = this.GetSystem<IBasicPoolSystem>().PopByPoolIdType(PoolIdEnum.BlockPoolId);
+                    block.transform.SetParent(this.parentTransform);
+                    block.transform.SetPositionAndRotation(localPos, Quaternion.identity);
 
-    //                //GameObject block = Instantiate(blockPrefab, localPos, Quaternion.identity, this.parentObject.transform);//pos为世界坐标
+                    int iEnum = Random.Range(0, 7);
+                    block.GetComponent<Block>().Create((BlockEnum)iEnum, i, j);
+                    AllBlocks[i][j] = block;
 
-    //                int iEnum = Random.Range(0, 7);
-    //                block.GetComponent<Block>().Create((BlockEnum)iEnum, i, j);
-    //                AllBlocks[i][j] = block;
-
-    //                newItemQueue.Enqueue(block);
-    //                count++;
-    //            }
-    //        }
-    //    }
-    //    yield break;
-    //}
+                    newItemQueue.Enqueue(block);
+                    count++;
+                }
+            }
+        }
+    }
 
     private void RemoveMatchBlock()
     {
         for (int i = 0; i < matchList.Count; ++i)
         {
             var item = matchList[i];
-            item.DestroyBlock();
+            item.RemoveBlock();
 
         }
 

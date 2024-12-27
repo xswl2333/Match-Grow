@@ -17,7 +17,7 @@ public class Block : Entity<Block>
     public GameObject m_BlockBg;
     public GameObject m_SelectBg;
     public bool hasCheck = false;
-    
+
     #region UIœ‘ æœ‡πÿ
     private bool isOver;
     private bool isShow;
@@ -157,7 +157,7 @@ public class Block : Entity<Block>
 
     public void OnClick()
     {
-        //this.SendCommand(new ExchangeCommand(this.gameObject));
+        this.SendCommand(new ClickBlockCommand(this.gameObject));
         Debug.Log($"m_x{m_x}**m_y{m_y}");
 
     }
@@ -167,7 +167,7 @@ public class Block : Entity<Block>
         this.SendCommand(new CheckMatchCommand(this));
     }
 
-    public void DestroyBlock()
+    public void RemoveBlock()
     {
         switch (this.BlockState)
         {
@@ -179,8 +179,11 @@ public class Block : Entity<Block>
                 break;
         }
 
-        //BasicPool.Instance.PushBlock(this.gameObject);
+        this.GetSystem<IBasicPoolSystem>().PushByPoolIdType(this.gameObject, PoolIdEnum.BlockPoolId);
+    }
 
+    public void DestroyBlock()
+    {
         Destroy(this.gameObject);
     }
 
