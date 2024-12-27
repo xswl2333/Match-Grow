@@ -47,30 +47,21 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     public void GenerateBlocks(int widths, int heights)
     {
-        int startX = -widths / 2;
-        int endX = -startX;
-
-        int startY = -heights / 2;
-        int endY = -startY;
-        int blockX = 0; int blockY = 0;
-
-        for (int i = startX; i < endX; i++)
+        
+        for (int i = 0; i < widths; i++)
         {
-            blockY = 0;
             List<GameObject> blocks = new List<GameObject>();
-            for (int j = startY; j < endY; j++)
+            for (int j = 0; j < heights; j++)
             {
-                Vector3 pos = new Vector3(i * GlobalConfig.GapWidth, -j * GlobalConfig.GapWidth, 0);
+                Vector3 pos = CalculationTool.BlockCoverPos(i, j); 
                 Vector3 localPos = this.parentTransform.TransformPoint(pos);//转换相对坐标
                 GameObject block = mResLoader.LoadSync<GameObject>("Block").Instantiate(localPos, Quaternion.identity, this.parentTransform);
 
                 int iEnum = Random.Range(0, 7);
-                block.GetComponent<Block>().Create((BlockEnum)iEnum, blockX, blockY);
+                block.GetComponent<Block>().Create((BlockEnum)iEnum, i, j);
 
                 blocks.Add(block);
-                blockY++;
             }
-            blockX++;
             mAllBlocks.Add(blocks);
         }
 
@@ -187,8 +178,8 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         lastBlock.GetBlockPos(ref firstPosX, ref firstPosY);
         currentSelectObj.GetComponent<Block>().GetBlockPos(ref secondPosX, ref secondPosY);
 
-        lastBlock.UpdatePos(secondPosX, secondPosY, true);
-        currentSelectObj.GetComponent<Block>().UpdatePos(firstPosX, firstPosY, true);
+        lastBlock.UpdatePos(secondPosX, secondPosY, false);
+        currentSelectObj.GetComponent<Block>().UpdatePos(firstPosX, firstPosY, false);
         lastBlock.SetBg(false);
         currentSelectObj.GetComponent<Block>().SetBg(false);
 
@@ -346,21 +337,11 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
         this.RemoveMatchBlock();
         ////延迟0.2秒
-        ActionKit.Delay(0.2f, () =>
-        {
-            Debug.Log("End Time:" + Time.time);
-
-        });
         //yield return new WaitForSeconds(0.2f);
         ////开启下落
         ////延迟0.38秒
         //yield return new WaitForSeconds(0.38f);
         BlocksDrop();
-        ActionKit.Delay(0.38f, () =>
-        {
-            Debug.Log("End Time:" + Time.time);
-
-        });
     }
 
 
@@ -408,7 +389,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         //yield return new WaitForSeconds(0.2f);
 
         CreateNewBlock();
-        //yield return new WaitForSeconds(0.2f);
+        //////yield return new WaitForSeconds(0.2f);
         MatchAllBlock();
     }
 
@@ -424,16 +405,13 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             {
                 if (GetBlockByIndex(i, j) == null)
                 {
-                    Vector3 pos = new Vector3(i * GlobalConfig.GapWidth, -j * GlobalConfig.GapWidth, 0);
-                    Vector3 localPos = this.parentTransform.TransformPoint(pos);//转换相对坐标
-
                     GameObject block = this.GetSystem<IBasicPoolSystem>().PopByPoolIdType(PoolIdEnum.BlockPoolId);
-                    block.transform.SetParent(this.parentTransform);
-                    block.transform.SetPositionAndRotation(localPos, Quaternion.identity);
-
+                    block.GetComponent<Block>().UpdatePos(i, j, false);
+                    
                     int iEnum = Random.Range(0, 7);
-                    block.GetComponent<Block>().Create((BlockEnum)iEnum, i, j);
-                    AllBlocks[i][j] = block;
+                    block.GetComponent<Block>().SetBlockType((BlockEnum)iEnum);
+                    block.SetActive(true);
+                    mAllBlocks[i][j] = block;
 
                     newItemQueue.Enqueue(block);
                     count++;

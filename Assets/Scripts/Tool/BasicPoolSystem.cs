@@ -93,10 +93,6 @@ public class BasicPoolSystem : AbstractSystem, IBasicPoolSystem
         {
             PoolItem go = pool.Pop();
             GameObject item = go.item;
-            item.SetActive(true);
-            Block block = item.GetComponent<Block>();
-            int iEnum = Random.Range(0, 7);
-            block.SetBlockType((BlockEnum)iEnum);
             return item;
         }
         else

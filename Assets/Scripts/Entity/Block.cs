@@ -138,7 +138,7 @@ public class Block : Entity<Block>
         this.m_x = targetPosX;
         this.m_y = targetPoxY;
 
-        Vector3 targetPos = new Vector3(this.m_x * GlobalConfig.GapWidth, -this.m_y * GlobalConfig.GapWidth, 0);
+        Vector3 targetPos = CalculationTool.BlockCoverPos(this.m_x, this.m_y);
         if (dotween)
         {
             // 0.3秒移动到目标点
@@ -204,12 +204,12 @@ public class Block : Entity<Block>
         //this.m_slime = null;
         this.BlockState = BlockState.Empty;
     }
-    private void OnDrawGizmos()
-    {
-        var color = Gizmos.color;
-        Gizmos.color = Color.white;
-        Gizmos.DrawCube(transform.position, Vector3.one);
-        Gizmos.color = color;
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    var color = Gizmos.color;
+    //    Gizmos.color = Color.white;
+    //    Gizmos.DrawCube(transform.position, Vector3.one);
+    //    Gizmos.color = color;
+    //}
 
 }
