@@ -118,7 +118,6 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         {
             Block lastObj = selectQueObj.Peek();
             lastObj.SetBg(false);
-
             HandleExchange();
 
         }
@@ -131,10 +130,8 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         if (result == 2)
         {
             currentSelectBlock.SetBg(false);
-
             selectQueObj.Clear();
-
-
+            return;
         }
         else if (result == 3)
         {
@@ -165,14 +162,14 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
         if (!CheckAroundBlock(lastBlock, currentBlock))
         {
-            res = 2;//周围格子不相邻
+            res = 2;//不是相邻格子
             return res;
         }
-        if (!CheckBlockState(lastBlock, currentBlock))
-        {
-            res = 3;//格子上有slime
-            return res;
-        }
+        //if (!CheckBlockState(lastBlock, currentBlock))
+        //{
+        //    res = 3;//格子上有slime
+        //    return res;
+        //}
 
         lastBlock.GetBlockPos(ref firstPosX, ref firstPosY);
         currentSelectBlock.GetBlockPos(ref secondPosX, ref secondPosY);
