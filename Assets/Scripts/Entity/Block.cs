@@ -135,6 +135,7 @@ public class Block : Entity<Block>
 
     public void UpdatePos(int targetPosX, int targetPoxY, bool dotween = false)
     {
+        
         this.m_x = targetPosX;
         this.m_y = targetPoxY;
 

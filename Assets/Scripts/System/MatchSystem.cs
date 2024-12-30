@@ -6,6 +6,7 @@ using UnityEngine;
 using System;
 using Random = UnityEngine.Random;
 using System.Collections;
+using Unity.VisualScripting;
 
 public interface IMatchSystem : ISystem
 {
@@ -32,7 +33,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     private List<Block> sameItemsList = new List<Block>();
 
     public bool isOperation = false;
-
+    private MatchState matchState = MatchState.Idle;
 
     protected override void OnInit()
     {
@@ -220,6 +221,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     public void CheckBlock(Block currentBlock)
     {
+        this.matchState = MatchState.RemoveBlock;
         this.ClearData();
         this.CheckSameBlockList(currentBlock);
 
@@ -289,8 +291,6 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         List<Block> tempBoomList = new List<Block>();
         //转移到临时列表
         tempBoomList.AddRange(matchList);
-        //开启处理BoomList的协程
-
         HandleMatchList(tempBoomList);
     }
 
@@ -336,17 +336,21 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         //}
 
         this.RemoveMatchBlock();
-        ////延迟0.2秒
-        //yield return new WaitForSeconds(0.2f);
-        ////开启下落
-        ////延迟0.38秒
-        //yield return new WaitForSeconds(0.38f);
-        BlocksDrop();
+        TimeTask dropTime = new TimeTask()
+        {
+            id = 0,
+            taskTime = 1.0f,
+            onCompleted = this.BlocksDrop
+        };
+        TimeTaskSystem.Instance.AddTimeTask(dropTime);
+
     }
 
 
     private void BlocksDrop()
     {
+        this.matchState = MatchState.BlocksDrop;
+
         isOperation = true;
         //逐列检测
         for (int i = 0; i < GlobalConfig.GridWidth; i++)
@@ -386,11 +390,14 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             }
         }
 
-        //yield return new WaitForSeconds(0.2f);
+        TimeTask createTime = new TimeTask()
+        {
+            id = 1,
+            taskTime = 0.5f,
+            onCompleted = this.CreateNewBlock
+        };
+        TimeTaskSystem.Instance.AddTimeTask(createTime);
 
-        CreateNewBlock();
-        //////yield return new WaitForSeconds(0.2f);
-        MatchAllBlock();
     }
 
 
@@ -418,6 +425,9 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 }
             }
         }
+
+        MatchAllBlock();
+
     }
 
     private void RemoveMatchBlock()
