@@ -158,7 +158,7 @@ public class Block : Entity<Block>
 
     public void OnClick()
     {
-        this.SendCommand(new ClickBlockCommand(this.gameObject));
+        this.SendCommand(new ClickBlockCommand(this));
         Debug.Log($"m_x{m_x}**m_y{m_y}");
 
     }

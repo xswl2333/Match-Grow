@@ -16,7 +16,7 @@ public interface IMatchSystem : ISystem
     void SetParentObject(Transform parentTransform) { }
     void CheckBlock(Block block) { }
 
-    void ExchangeBlock(GameObject block) { }
+    void ExchangeBlock(Block block) { }
 }
 
 public class MatchSystem : AbstractSystem, IMatchSystem
@@ -26,8 +26,8 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     public List<List<GameObject>> AllBlocks => mAllBlocks;
     private List<List<GameObject>> mAllBlocks = new List<List<GameObject>>();
 
-    private GameObject currentSelectObj;
-    private Queue<GameObject> selectQueObj = new Queue<GameObject>();
+    private Block currentSelectBlock;
+    private Queue<Block> selectQueObj = new Queue<Block>();
 
     private List<Block> matchList = new List<Block>();
     private List<Block> sameItemsList = new List<Block>();
@@ -48,13 +48,13 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     public void GenerateBlocks(int widths, int heights)
     {
-        
+
         for (int i = 0; i < widths; i++)
         {
             List<GameObject> blocks = new List<GameObject>();
             for (int j = 0; j < heights; j++)
             {
-                Vector3 pos = CalculationTool.BlockCoverPos(i, j); 
+                Vector3 pos = CalculationTool.BlockCoverPos(i, j);
                 Vector3 localPos = this.parentTransform.TransformPoint(pos);//转换相对坐标
                 GameObject block = mResLoader.LoadSync<GameObject>("Block").Instantiate(localPos, Quaternion.identity, this.parentTransform);
 
@@ -107,17 +107,17 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     }
 
 
-    public void ExchangeBlock(GameObject clickObj)
+    public void ExchangeBlock(Block clickBlock)
     {
         //SoundManager.Instance.PlaySound(SoundsConfig.Click1);
-        currentSelectObj = clickObj;
-        currentSelectObj.GetComponent<Block>().SetBg(true);
-        selectQueObj.Enqueue(currentSelectObj);
+        currentSelectBlock = clickBlock;
+        currentSelectBlock.SetBg(true);
+        selectQueObj.Enqueue(currentSelectBlock);
 
         if (selectQueObj.Count > 1)
         {
-            GameObject lastObj = selectQueObj.Peek();
-            lastObj.GetComponent<Block>().SetBg(false);
+            Block lastObj = selectQueObj.Peek();
+            lastObj.SetBg(false);
 
             HandleExchange();
 
@@ -130,8 +130,8 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         int result = this.Exchange();
         if (result == 2)
         {
-            var currentBlock = currentSelectObj.GetComponent<Block>();
-            currentBlock.SetBg(false);
+            currentSelectBlock.SetBg(false);
+
             selectQueObj.Clear();
 
 
@@ -141,14 +141,12 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             selectQueObj.Dequeue();
         }
 
-        //yield return new WaitForSeconds(0.3f);
 
-        var block = currentSelectObj.GetComponent<Block>();
+        var block = currentSelectBlock;
         block.CheckAroundBoom();
 
-        GameObject lastObj = selectQueObj.Peek();
-        block = lastObj.GetComponent<Block>();
-        block.CheckAroundBoom();
+        Block lastObj = selectQueObj.Peek();
+        lastObj.CheckAroundBoom();
 
         selectQueObj.Clear();
 
@@ -161,9 +159,9 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         int firstPosX = 0, firstPosY = 0;
         int secondPosX = 0, secondPosY = 0;
 
-        GameObject lastObj = selectQueObj.Peek();
+        Block lastObj = selectQueObj.Peek();
         var lastBlock = lastObj.GetComponent<Block>();
-        var currentBlock = currentSelectObj.GetComponent<Block>();
+        var currentBlock = currentSelectBlock;
 
         if (!CheckAroundBlock(lastBlock, currentBlock))
         {
@@ -177,15 +175,15 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         }
 
         lastBlock.GetBlockPos(ref firstPosX, ref firstPosY);
-        currentSelectObj.GetComponent<Block>().GetBlockPos(ref secondPosX, ref secondPosY);
+        currentSelectBlock.GetBlockPos(ref secondPosX, ref secondPosY);
 
         lastBlock.UpdatePos(secondPosX, secondPosY, false);
-        currentSelectObj.GetComponent<Block>().UpdatePos(firstPosX, firstPosY, false);
+        currentSelectBlock.UpdatePos(firstPosX, firstPosY, true);
         lastBlock.SetBg(false);
-        currentSelectObj.GetComponent<Block>().SetBg(false);
+        currentSelectBlock.SetBg(false);
 
-        mAllBlocks[firstPosX][firstPosY] = currentSelectObj;
-        mAllBlocks[secondPosX][secondPosY] = lastObj;
+        mAllBlocks[firstPosX][firstPosY] = currentSelectBlock.GetGameObject();
+        mAllBlocks[secondPosX][secondPosY] = lastObj.GetGameObject();
 
         return res;
     }
@@ -339,7 +337,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         TimeTask dropTime = new TimeTask()
         {
             id = 0,
-            taskTime = 1.0f,
+            taskTime = 0.38f,
             onCompleted = this.BlocksDrop
         };
         TimeTaskSystem.Instance.AddTimeTask(dropTime);
@@ -393,7 +391,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         TimeTask createTime = new TimeTask()
         {
             id = 1,
-            taskTime = 0.5f,
+            taskTime = 0.3f,
             onCompleted = this.CreateNewBlock
         };
         TimeTaskSystem.Instance.AddTimeTask(createTime);
@@ -414,7 +412,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 {
                     GameObject block = this.GetSystem<IBasicPoolSystem>().PopByPoolIdType(PoolIdEnum.BlockPoolId);
                     block.GetComponent<Block>().UpdatePos(i, j, false);
-                    
+
                     int iEnum = Random.Range(0, 7);
                     block.GetComponent<Block>().SetBlockType((BlockEnum)iEnum);
                     block.SetActive(true);

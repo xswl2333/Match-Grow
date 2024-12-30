@@ -7,9 +7,9 @@ using UnityEngine;
 public class ClickBlockCommand : AbstractCommand
 {
     //private readonly Block block;
-    private readonly GameObject block;
+    private readonly Block block;
 
-    public ClickBlockCommand(GameObject block)
+    public ClickBlockCommand(Block block)
     {
         this.block = block;
     }
