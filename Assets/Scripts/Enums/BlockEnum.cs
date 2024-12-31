@@ -13,5 +13,7 @@ public enum BlockEnum
 public enum BlockState
 {
     Empty,
-    Slime
+    Freeze,//冰冻
+    Universal,//万能格子
+    
 }

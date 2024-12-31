@@ -19,6 +19,7 @@ public class Block : Entity<Block>
     public bool hasCheck = false;
 
     #region UIœ‘ æœ‡πÿ
+    private ResLoader mResLoader;
     private bool isOver;
     private bool isShow;
     #endregion
@@ -26,6 +27,8 @@ public class Block : Entity<Block>
     public void Start()
     {
         GetComponent<Button>().onClick.AddListener(OnClick);
+        mResLoader = ResLoader.Allocate();
+
     }
 
 
@@ -74,7 +77,11 @@ public class Block : Entity<Block>
     public void SetBlockState(BlockState state)
     {
         this.BlockState = state;
-
+        if (this.BlockState == BlockState.Freeze)
+        {
+            Material mat = mResLoader.LoadSync<Material>("Ice");
+            this.m_BlockBg.GetComponent<Image>().material = mat;
+        }
     }
 
     public void SetBlockPos(int x, int y)
@@ -135,7 +142,7 @@ public class Block : Entity<Block>
 
     public void UpdatePos(int targetPosX, int targetPoxY, bool dotween = false)
     {
-        
+
         this.m_x = targetPosX;
         this.m_y = targetPoxY;
 
@@ -150,7 +157,7 @@ public class Block : Entity<Block>
             transform.localPosition = targetPos;
         }
 
-        if (this.BlockState == BlockState.Slime)
+        if (this.BlockState == BlockState.Freeze)
         {
             //this.m_slime.MoveTarget(this.m_x, this.m_y);
         }
@@ -174,7 +181,7 @@ public class Block : Entity<Block>
         {
             case BlockState.Empty:
                 break;
-            case BlockState.Slime:
+            case BlockState.Freeze:
                 //this.m_slime.Destroy();
                 this.RemoveSlime();
                 break;
@@ -205,12 +212,4 @@ public class Block : Entity<Block>
         //this.m_slime = null;
         this.BlockState = BlockState.Empty;
     }
-    //private void OnDrawGizmos()
-    //{
-    //    var color = Gizmos.color;
-    //    Gizmos.color = Color.white;
-    //    Gizmos.DrawCube(transform.position, Vector3.one);
-    //    Gizmos.color = color;
-    //}
-
 }

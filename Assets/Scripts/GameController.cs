@@ -30,7 +30,7 @@ public class GameController : MonoBehaviour, ISingleton
 
     private void Start()
     {
-        UIKit.OpenPanel<MainView>();
+        UIKit.OpenPanel<InitView>();
     }
 
 

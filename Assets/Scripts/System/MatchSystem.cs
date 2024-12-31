@@ -206,7 +206,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     public bool CheckBlockState(Block currentBlock, Block targetBlock)
     {
         bool res = true;
-        if (currentBlock.BlockState == BlockState.Slime || targetBlock.BlockState == BlockState.Slime)
+        if (currentBlock.BlockState == BlockState.Freeze || targetBlock.BlockState == BlockState.Freeze)
         {
             res = false;
         }

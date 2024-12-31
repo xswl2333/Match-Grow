@@ -10,6 +10,6 @@ public class GlobalConfig
     public const int GridWidth = 6;
     //格子偏移距离
     public const float offHeight = 0.5f;
-    //slime上限
-    public const int SlimeMaxCount= 6;
+    //冰冻格子上限
+    public const int TestFreezeBlock = 6;
 }
