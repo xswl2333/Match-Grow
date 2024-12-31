@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class GlobalConfig
@@ -12,4 +13,12 @@ public class GlobalConfig
     public const float offHeight = 0.5f;
     //冰冻格子上限
     public const int TestFreezeBlock = 6;
+
+    public static bool GIsPlay
+    {
+        get { return GIsPlay; }
+        set { GIsPlay = value; }
+    }
+
+
 }
