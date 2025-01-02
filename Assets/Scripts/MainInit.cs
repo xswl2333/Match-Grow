@@ -12,5 +12,6 @@ public class MainInit : Architecture<MainInit>
         this.RegisterSystem<IMatchSystem>(new MatchSystem());
         this.RegisterSystem<IBasicPoolSystem>(new BasicPoolSystem());
         this.RegisterSystem<IResourceLoadSystem>(new ResourceLoadSystem());        
+        this.RegisterModel<IGameModel>(new GameModel());        
     }
 }

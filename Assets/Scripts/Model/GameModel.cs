@@ -1,0 +1,24 @@
+using QFramework;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+
+public interface IGameModel : IModel
+{
+    //消除匹配规则之后获得点数
+    BindableProperty<int> EnergyPoint_Count  { get; }
+}
+
+public class GameModel : AbstractModel, IGameModel
+{
+    public BindableProperty<int> EnergyPoint_Count { get; } = new BindableProperty<int>();
+
+    protected override void OnInit()
+    {
+        
+
+    }
+}
+
+
