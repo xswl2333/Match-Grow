@@ -15,7 +15,7 @@ public class BlockEditor : EditorWindow
 
     private void OnEnable()
     {
-        int gridSize = GlobalConfig.GridWidth;
+        int gridSize = GlobalGameConfig.GridWidth;
         grid = new BlockState[gridSize, gridSize];
     }
 
@@ -28,7 +28,7 @@ public class BlockEditor : EditorWindow
     private void DrawGrid()
     {
 
-        int gridSize = GlobalConfig.GridWidth;
+        int gridSize = GlobalGameConfig.GridWidth;
         float cellSize = 50f; // 格子大小
         float spacing = 30f;  // 格子间隔
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GlobalConfig
+public class GlobalGameConfig
 {
     //¸ñ×Ó¾àÀë
     public const float GapWidth = 1.5f;

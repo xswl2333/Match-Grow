@@ -8,6 +8,10 @@ Assets/QFramework/
 Assets/QFrameworkData/
 Assets/DOTween/
 Assets/DOTween.meta
+Assets/Packages/
+Assets/Packages.meta
+Assets/NuGet/
+Assets/NuGet.meta
 Assets/Resources/DOTweenSettings.asset
 Assets/Resources/DOTweenSettings.asset.meta
 UserSettings/

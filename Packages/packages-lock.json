@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.github.messagepack-csharp": {
+      "version": "https://github.com/MessagePack-CSharp/MessagePack-CSharp.git?path=src/MessagePack.UnityClient/Assets/Scripts/MessagePack",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "8373710fb0ae4bb453737f773b930401d8500c31"
+    },
     "com.unity.2d.animation": {
       "version": "7.1.0",
       "depth": 1,

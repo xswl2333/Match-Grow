@@ -348,14 +348,14 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
         isOperation = true;
         //逐列检测
-        for (int i = 0; i < GlobalConfig.GridWidth; i++)
+        for (int i = 0; i < GlobalGameConfig.GridWidth; i++)
         {
             //计数器
             int count = 0;
             //下落队列
             Queue<Block> dropQueue = new Queue<Block>();
             //逐行检测
-            for (int j = GlobalConfig.GridWidth; j >= 0; --j)
+            for (int j = GlobalGameConfig.GridWidth; j >= 0; --j)
             {
                 if (GetBlockByIndex(i, j) != null)
                 {
@@ -366,7 +366,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 }
             }
 
-            if (count == GlobalConfig.GridWidth)
+            if (count == GlobalGameConfig.GridWidth)
             {
                 dropQueue.Clear();
                 continue;
@@ -380,7 +380,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 //修改全局数组(原位置情况)
                 DelBlockByIndex(current.m_x, current.m_y);
                 //下落
-                current.UpdatePos(current.m_x, GlobalConfig.GridWidth - k - 1, true);
+                current.UpdatePos(current.m_x, GlobalGameConfig.GridWidth - k - 1, true);
                 mAllBlocks[current.m_x][current.m_y] = current.GetGameObject();
             }
         }
@@ -399,11 +399,11 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     public void CreateNewBlock()
     {
         isOperation = true;
-        for (int i = 0; i < GlobalConfig.GridWidth; i++)
+        for (int i = 0; i < GlobalGameConfig.GridWidth; i++)
         {
             int count = 0;
             Queue<GameObject> newItemQueue = new Queue<GameObject>();
-            for (int j = 0; j < GlobalConfig.GridWidth; j++)
+            for (int j = 0; j < GlobalGameConfig.GridWidth; j++)
             {
                 if (GetBlockByIndex(i, j) == null)
                 {
@@ -506,7 +506,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     public Block GetBlockByIndex(int indexX, int indexY)
     {
         Block res = null;
-        if (indexX < GlobalConfig.GridWidth && indexX >= 0 && indexY >= 0 && indexY < GlobalConfig.GridWidth)
+        if (indexX < GlobalGameConfig.GridWidth && indexX >= 0 && indexY >= 0 && indexY < GlobalGameConfig.GridWidth)
         {
             if (mAllBlocks[indexX][indexY] != null)
             {
