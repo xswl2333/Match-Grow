@@ -1,5 +1,5 @@
 
-public enum BlockEnum
+public enum BlockType
 {
     Red,
     Green,

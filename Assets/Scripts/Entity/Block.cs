@@ -10,7 +10,7 @@ using UnityEngine.UI;
 
 public class Block : Entity<Block>
 {
-    public BlockEnum BlockType { get; private set; }
+    public BlockType BlockType { get; private set; }
     public BlockState BlockState { get; private set; }
     public int m_x { get; private set; }
     public int m_y { get; private set; }
@@ -61,14 +61,14 @@ public class Block : Entity<Block>
 
     //}
 
-    public void Create(BlockEnum BlockType, int x, int y, BlockState state = BlockState.Empty)
+    public void Create(BlockType BlockType, int x, int y, BlockState state = BlockState.Empty)
     {
         this.SetBlockType(BlockType);
         this.SetBlockPos(x, y);
         this.SetBlockState(state);
     }
 
-    public void SetBlockType(BlockEnum BlockType)
+    public void SetBlockType(BlockType BlockType)
     {
         this.BlockType = BlockType;
         this.SetColor();
@@ -100,25 +100,25 @@ public class Block : Entity<Block>
     {
         switch (this.BlockType)
         {
-            case BlockEnum.Red:
+            case BlockType.Red:
                 m_BlockBg.GetComponent<Image>().color = Color.red;
                 break;
-            case BlockEnum.Green:
+            case BlockType.Green:
                 m_BlockBg.GetComponent<Image>().color = Color.green;
                 break;
-            case BlockEnum.Blue:
+            case BlockType.Blue:
                 m_BlockBg.GetComponent<Image>().color = Color.blue;
                 break;
-            case BlockEnum.Yellow:
+            case BlockType.Yellow:
                 m_BlockBg.GetComponent<Image>().color = Color.yellow;
                 break;
-            case BlockEnum.Orange:
+            case BlockType.Orange:
                 m_BlockBg.GetComponent<Image>().color = new Color32(191, 117, 26, 255);
                 break;
-            case BlockEnum.Purple:
+            case BlockType.Purple:
                 m_BlockBg.GetComponent<Image>().color = new Color32(174, 26, 190, 255);
                 break;
-            case BlockEnum.Pink:
+            case BlockType.Pink:
                 m_BlockBg.GetComponent<Image>().color = new Color32(188, 68, 110, 255);
                 break;
             default:

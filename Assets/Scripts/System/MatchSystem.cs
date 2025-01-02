@@ -59,7 +59,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 GameObject block = mResLoader.LoadSync<GameObject>("Block").Instantiate(localPos, Quaternion.identity, this.parentTransform);
 
                 int iEnum = Random.Range(0, 7);
-                block.GetComponent<Block>().Create((BlockEnum)iEnum, i, j);
+                block.GetComponent<Block>().Create((BlockType)iEnum, i, j);
 
                 blocks.Add(block);
             }
@@ -411,7 +411,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                     block.GetComponent<Block>().UpdatePos(i, j, false);
 
                     int iEnum = Random.Range(0, 7);
-                    block.GetComponent<Block>().SetBlockType((BlockEnum)iEnum);
+                    block.GetComponent<Block>().SetBlockType((BlockType)iEnum);
                     block.SetActive(true);
                     mAllBlocks[i][j] = block;
 
@@ -452,7 +452,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
     private bool CheckItemsInterval(bool isHorizontal, Block begin, Block end)
     {
         //获取图案
-        BlockEnum type = begin.BlockType;
+        BlockType type = begin.BlockType;
         //如果是横向
         if (isHorizontal)
         {
