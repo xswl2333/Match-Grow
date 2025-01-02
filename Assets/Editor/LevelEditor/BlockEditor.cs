@@ -1,6 +1,8 @@
+using MessagePack;
 using QFramework;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -23,6 +25,28 @@ public class BlockEditor : EditorWindow
     private void OnGUI()
     {
         DrawGrid();
+
+        // 添加保存按钮
+        if (GUILayout.Button("保存配置"))
+        {
+            string saveFilePath = EditorUtility.SaveFilePanel("Save Grid Data", "", "Block", "msgpack");
+            if (!string.IsNullOrEmpty(saveFilePath))
+            {
+                SaveGridData(grid, GlobalGameConfig.GridWidth, saveFilePath);
+            }
+        }
+
+        // 添加加载按钮
+        if (GUILayout.Button("加载配置"))
+        {
+            string loadFilePath = EditorUtility.OpenFilePanel("Load Grid Data", "", "msgpack");
+            if (!string.IsNullOrEmpty(loadFilePath))
+            {
+                grid = LoadGridData(GlobalGameConfig.GridWidth, loadFilePath);
+                Debug.Log($"Grid data loaded from {loadFilePath}");
+                Repaint(); // 强制刷新界面
+            }
+        }
     }
 
     private void DrawGrid()
@@ -89,4 +113,54 @@ public class BlockEditor : EditorWindow
             default: return Color.gray; // Default color for Empty
         }
     }
+
+
+    private List<BlockData> ConvertGridToBlockDataList(BlockState[,] grid, int gridSize)
+    {
+        List<BlockData> blockDataList = new List<BlockData>();
+        for (int row = 0; row < gridSize; row++)
+        {
+            for (int col = 0; col < gridSize; col++)
+            {
+                blockDataList.Add(new BlockData((int)grid[row, col], row, col));
+            }
+        }
+        return blockDataList;
+    }
+
+    private void SaveGridData(BlockState[,] grid, int gridSize, string filePath)
+    {
+        // 将二维数组转换为 BlockData 列表
+        List<BlockData> blockDataList = ConvertGridToBlockDataList(grid, gridSize);
+
+        // 序列化为二进制数据
+        byte[] serializedData = MessagePackSerializer.Serialize(blockDataList);
+
+        // 保存到文件
+        File.WriteAllBytes(filePath, serializedData);
+
+        Debug.Log($"Grid data saved to {filePath}");
+    }
+
+
+    public static BlockState[,] LoadGridData(int gridSize, string filePath)
+    {
+        // 从文件读取二进制数据
+        byte[] data = File.ReadAllBytes(filePath);
+
+        // 反序列化为 BlockData 列表
+        List<BlockData> blockDataList = MessagePackSerializer.Deserialize<List<BlockData>>(data);
+
+        // 将 BlockData 列表转换为二维数组
+        BlockState[,] grid = new BlockState[gridSize, gridSize];
+        foreach (var blockData in blockDataList)
+        {
+            grid[blockData.X, blockData.Y] = (BlockState)blockData.BlockState;
+        }
+
+        return grid;
+    }
+
 }
+
+
