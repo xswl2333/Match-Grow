@@ -12,7 +12,10 @@ public interface IGameModel : IModel
 
 public class GameModel : AbstractModel, IGameModel
 {
-    public BindableProperty<int> EnergyPoint_Count { get; } = new BindableProperty<int>();
+    public BindableProperty<int> EnergyPoint_Count { get; } = new BindableProperty<int>()
+    { 
+        Value = 0
+    };
 
     protected override void OnInit()
     {

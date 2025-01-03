@@ -1,3 +1,5 @@
+using QFramework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -6,11 +8,32 @@ using UnityEngine.UI;
 
 public class GameView : BaseView
 {
-    private Text mCount; //匹配规则数量或者消除次数
+    
+    private IGameModel mGameModel;
 
-    void Start()
+
+    private void Start()
     {
-        mCount = uiComponents["Universal"].text;
+        mGameModel = this.GetModel<IGameModel>();
+        mGameModel.EnergyPoint_Count.Register(OnEnergyChanged);
+
+
+        // 第一次需要调用一下
+        OnEnergyChanged(mGameModel.EnergyPoint_Count.Value);
+
     }
 
+    private void OnEnergyChanged(int count)
+    {
+        string str = $"能量点 {count}"; 
+         uiComponents["Universal"].text.text= str;
+    }
+
+
+    private void OnDestroy()
+    {
+        mGameModel.EnergyPoint_Count.UnRegister(OnEnergyChanged);
+        mGameModel = null;
+
+    }
 }

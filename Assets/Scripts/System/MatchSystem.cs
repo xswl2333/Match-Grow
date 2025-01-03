@@ -37,7 +37,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     protected override void OnInit()
     {
-
+      
     }
 
     public void SetParentObject(Transform parentTransform)
@@ -335,15 +335,16 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         {
             id = 0,
             taskTime = 0.38f,
-            onCompleted = this.BlocksDrop
+            onCompleted = this.BlocksDrop,
         };
         TimeTaskSystem.Instance.AddTimeTask(dropTime);
-
+        
     }
 
 
     private void BlocksDrop()
     {
+        this.GetModel<IGameModel>().EnergyPoint_Count.Value++;
         this.matchState = MatchState.BlocksDrop;
 
         isOperation = true;
