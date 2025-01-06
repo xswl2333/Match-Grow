@@ -344,7 +344,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     private void BlocksDrop()
     {
-        this.GetModel<IGameModel>().EnergyPoint_Count.Value++;
+        this.GetModel<IGameModel>().SkillPoint.Value++;
         this.matchState = MatchState.BlocksDrop;
 
         isOperation = true;

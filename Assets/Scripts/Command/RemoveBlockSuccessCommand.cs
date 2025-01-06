@@ -10,7 +10,7 @@ public class RemoveBlockSuccessCommand : AbstractCommand
     protected override void OnExecute()
     {
         var gameModel = this.GetModel<IGameModel>();
-        gameModel.EnergyPoint_Count.Value++;
+        gameModel.SkillPoint.Value++;
 
         
 

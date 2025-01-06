@@ -15,11 +15,11 @@ public class GameView : BaseView
     private void Start()
     {
         mGameModel = this.GetModel<IGameModel>();
-        mGameModel.EnergyPoint_Count.Register(OnEnergyChanged);
+        mGameModel.SkillPoint.Register(OnEnergyChanged);
 
 
         // 第一次需要调用一下
-        OnEnergyChanged(mGameModel.EnergyPoint_Count.Value);
+        OnEnergyChanged(mGameModel.SkillPoint.Value);
 
     }
 
@@ -32,7 +32,7 @@ public class GameView : BaseView
 
     private void OnDestroy()
     {
-        mGameModel.EnergyPoint_Count.UnRegister(OnEnergyChanged);
+        mGameModel.SkillPoint.UnRegister(OnEnergyChanged);
         mGameModel = null;
 
     }

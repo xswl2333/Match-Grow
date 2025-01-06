@@ -7,12 +7,12 @@ using UnityEngine;
 public interface IGameModel : IModel
 {
     //消除匹配规则之后获得点数
-    BindableProperty<int> EnergyPoint_Count  { get; }
+    BindableProperty<int> SkillPoint  { get; }
 }
 
 public class GameModel : AbstractModel, IGameModel
 {
-    public BindableProperty<int> EnergyPoint_Count { get; } = new BindableProperty<int>()
+    public BindableProperty<int> SkillPoint { get; } = new BindableProperty<int>()
     { 
         Value = 0
     };
