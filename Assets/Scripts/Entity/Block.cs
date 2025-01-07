@@ -24,7 +24,7 @@ public class Block : Entity<Block>
     private bool isShow;
     #endregion
 
-    public void Start()
+    private void Awake()
     {
         GetComponent<Button>().onClick.AddListener(OnClick);
         mResLoader = ResLoader.Allocate();

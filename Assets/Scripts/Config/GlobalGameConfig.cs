@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 
-public class GlobalGameConfig
+[CreateAssetMenu(fileName = "GlobalGameConfig", menuName = "Assets/Resources/Data")]
+public class GlobalGameConfig : ScriptableObject
 {
     //格子距离
     public const float GapWidth = 1.5f;
@@ -11,14 +12,8 @@ public class GlobalGameConfig
     public const int GridWidth = 6;
     //格子偏移距离
     public const float offHeight = 0.5f;
-    //冰冻格子上限
-    public const int TestFreezeBlock = 6;
 
-    public static bool GIsPlay
-    {
-        get { return GIsPlay; }
-        set { GIsPlay = value; }
-    }
+    public bool EditorModel = false;
 
 
 }

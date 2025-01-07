@@ -19,8 +19,8 @@ public class GameModel : AbstractModel, IGameModel
 
     protected override void OnInit()
     {
-        
-
+        var storage = this.GetUtility<IStorage>();
+        storage.LoadGrid();
     }
 }
 

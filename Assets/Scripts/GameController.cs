@@ -7,6 +7,7 @@ public class GameController : MonoBehaviour, ISingleton
     private RectTransform UICanvas;
     private Camera UICamera;
     public Transform GameRoot;
+    public GlobalGameConfig gameConfig;
 
     public static GameController Instance => MonoSingletonProperty<GameController>.Instance;
 
@@ -26,6 +27,7 @@ public class GameController : MonoBehaviour, ISingleton
         pos.z = -1000;
         UICamera.transform.position = pos;   
         UIKit.Root.ScreenSpaceCameraRenderMode();
+        gameConfig = ResLoader.Allocate().LoadSync<GlobalGameConfig>("GlobalGameConfig");
     }
 
     private void Start()
