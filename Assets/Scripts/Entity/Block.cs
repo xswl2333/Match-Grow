@@ -165,6 +165,17 @@ public class Block : Entity<Block>
 
     public void OnClick()
     {
+        if (this.BlockState == BlockState.Freeze)
+        {
+            transform.DOShakePosition(
+                duration: 0.2f,          // 持续时间
+                strength: new Vector3(0.1f, 0, 0), // 只在X和Y轴晃动
+                vibrato: 50,           // 震动次数
+                randomness: 90,      // 随机性
+                fadeOut: true
+                );
+            return;
+        }
         this.SendCommand(new ClickBlockCommand(this));
         Debug.Log($"m_x{m_x}**m_y{m_y}");
 

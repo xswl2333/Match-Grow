@@ -11,6 +11,9 @@ using MessagePack;
 using static UnityEngine.RuleTile.TilingRuleOutput;
 using UnityEngine.XR;
 using Transform = UnityEngine.Transform;
+using MoonSharp.Interpreter.IO;
+using UnityEditor.Search;
+using System.Linq;
 
 public interface IMatchSystem : ISystem
 {
@@ -31,6 +34,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     public List<List<GameObject>> AllBlocks => mAllBlocks;
     private List<List<GameObject>> mAllBlocks = new List<List<GameObject>>();
+    private int totalBlockAmount;
 
     private Block currentSelectBlock;
     private Queue<Block> selectQueObj = new Queue<Block>();
@@ -76,9 +80,9 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
                     int iEnum = Random.Range(0, 7);
                     block.GetComponent<Block>().Create((BlockType)iEnum, i, j, grid[i, j]);
-                    
-                    blocks.Add(block);
 
+                    blocks.Add(block);
+                    totalBlockAmount++;
                 }
                 mAllBlocks.Add(blocks);
             }
@@ -98,6 +102,8 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                     block.GetComponent<Block>().Create((BlockType)iEnum, i, j);
 
                     blocks.Add(block);
+                    totalBlockAmount++;
+
                 }
                 mAllBlocks.Add(blocks);
             }
@@ -241,17 +247,6 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         return res;
     }
 
-    public bool CheckBlockState(Block currentBlock, Block targetBlock)
-    {
-        bool res = true;
-        if (currentBlock.BlockState == BlockState.Freeze || targetBlock.BlockState == BlockState.Freeze)
-        {
-            res = false;
-        }
-
-        return res;
-    }
-
     public void CheckBlock(Block currentBlock)
     {
         this.matchState = MatchState.RemoveBlock;
@@ -333,6 +328,9 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         //如果已存在，跳过
         if (sameItemsList.Contains(currentBlock))
             return;
+        if (currentBlock.BlockState == BlockState.Freeze)
+            return;
+
         //添加到列表
         sameItemsList.Add(currentBlock);
         //上下左右的Item
@@ -361,6 +359,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             //AudioManager.instance.PlayMagicalAudio();
             //将被消除的Item在全局列表中移除
             DelBlockByIndex(block.m_x, block.m_y);
+            totalBlockAmount--;
         }
         //检测Item是否已经开发播放离开动画
         //while (!tempBoomList[0].GetComponent<AnimatedButton>().CheckPlayExit())
@@ -382,47 +381,46 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     private void BlocksDrop()
     {
+        //TODO 缺少技能点规则
         this.GetModel<IGameModel>().SkillPoint.Value++;
         this.matchState = MatchState.BlocksDrop;
-
         isOperation = true;
-        //逐列检测
-        for (int i = 0; i < GlobalGameConfig.GridWidth; i++)
+
+        bool hasDropped;
+        int maxFallSteps = totalBlockAmount ;//下落移动的步数
+
+        do
         {
-            //计数器
-            int count = 0;
-            //下落队列
-            Queue<Block> dropQueue = new Queue<Block>();
-            //逐行检测
-            for (int j = GlobalGameConfig.GridWidth; j >= 0; --j)
+            hasDropped = false;
+            maxFallSteps--; // 关键修复：递减计数器
+
+            // 从倒数第二行开始检测（最底层不需要检测）
+            for (int y = GlobalGameConfig.GridHeight - 1; y >= 0; y--)
             {
-                if (GetBlockByIndex(i, j) != null)
+                // 逐列检测
+                for (int x = 0; x < GlobalGameConfig.GridWidth; x++)
                 {
-                    //计数
-                    count++;
-                    //放入队列
-                    dropQueue.Enqueue(mAllBlocks[i][j].GetComponent<Block>());
+                    Block currentBlock = GetBlockByIndex(x, y);
+                    if (currentBlock == null) continue;
+                    if (currentBlock.BlockState == BlockState.Freeze) continue;
+
+                    bool res = CheckItemDrop(x, y);
+                    // 检测下方是否为空
+                    if (res)
+                    {
+                        // 执行单格下落
+                        DelBlockByIndex(currentBlock.m_x, currentBlock.m_y);
+                        currentBlock.UpdatePos(currentBlock.m_x, y + 1, true);
+                        mAllBlocks[currentBlock.m_x][currentBlock.m_y] = currentBlock.GetGameObject();
+                        hasDropped = true;
+                    }
                 }
             }
 
-            if (count == GlobalGameConfig.GridWidth)
-            {
-                dropQueue.Clear();
-                continue;
-            }
-
-            //下落
-            for (int k = 0; k < count; k++)
-            {
-                //获取要下落的Item
-                Block current = dropQueue.Dequeue();
-                //修改全局数组(原位置情况)
-                DelBlockByIndex(current.m_x, current.m_y);
-                //下落
-                current.UpdatePos(current.m_x, GlobalGameConfig.GridWidth - k - 1, true);
-                mAllBlocks[current.m_x][current.m_y] = current.GetGameObject();
-            }
+            Debug.LogError(string.Format("检测步数{0}", maxFallSteps));
         }
+        while (hasDropped && maxFallSteps > 0); // 持续检测直到没有下落或达到最大步数
+
 
         TimeTask createTime = new TimeTask()
         {
@@ -434,6 +432,39 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     }
 
+    public int BlockDropPos(Block block, Dictionary<int, int> stageMap)
+    {
+        int resY = -1;
+        int MinY = 0;
+        int MaxY = GlobalGameConfig.GridWidth;
+        foreach (var kvp in stageMap)
+        {
+            int key = kvp.Key;   // 阶段的起始值
+            int value = kvp.Value; // 阶段的结束值
+
+            // 检查是否满足 key < m_y < value
+            if (block.m_y >= key && block.m_y <= value)
+            {
+                MinY = key;
+                MaxY = value;
+                break; // 找到后立即退出循环
+            }
+        }
+
+        for (int i = MaxY; i >= MinY; --i)
+        {
+            Block checkBlock = GetBlockByIndex(block.m_x, i);
+            if (checkBlock == null)
+            {
+                resY = i;
+                break;
+            }
+
+        }
+
+        return resY;
+
+    }
 
     public void CreateNewBlock()
     {
@@ -507,11 +538,15 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             //遍历中间的Item
             for (int i = beginIndex + 1; i < endIndex; i++)
             {
+                Block checkBlock = GetBlockByIndex(begin.m_x, i);
                 //异常处理（中间未生成，标识为不合法）
-                if (GetBlockByIndex(begin.m_x, i) == null)
+                if (checkBlock == null)
+                    return false;
+                //冻结无法交换
+                if (checkBlock.BlockState == BlockState.Freeze)
                     return false;
                 //如果中间有间隙（有图案不一致的）
-                if (GetBlockByIndex(begin.m_x, i).BlockType != type)
+                if (checkBlock.BlockType != type)
                 {
                     return false;
                 }
@@ -532,8 +567,14 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             //遍历中间的Item
             for (int i = beginIndex + 1; i < endIndex; i++)
             {
+                Block checkBlock = GetBlockByIndex(i, begin.m_y);
+                if (checkBlock == null)
+                    return false;
+                if (checkBlock.BlockState == BlockState.Freeze)
+                    return false;
+
                 //如果中间有间隙（有图案不一致的）
-                if (GetBlockByIndex(i, begin.m_y).BlockType != type)
+                if (checkBlock.BlockType != type)
                 {
                     return false;
                 }
@@ -579,6 +620,23 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         return GetBlockByIndex(row, column);
     }
 
+    private bool CheckItemDrop(int x, int y)
+    {
+        bool res = false;
+        int row = x;
+        int column = y + 1;
+        if (column >= GlobalGameConfig.GridHeight)
+        {
+            res = false;
+            return res;
+        }
+        var Downblock =mAllBlocks[row][column];
+        if (Downblock == null)
+        {
+            res = true;
+        }
+        return res;
+    }
 
     private Block GetLeftItem(Block block)
     {
