@@ -389,6 +389,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         bool hasDropped;
         int maxFallSteps = totalBlockAmount ;//下落移动的步数
 
+        HashSet<Vector2Int> processedSpaces = new HashSet<Vector2Int>();
         do
         {
             hasDropped = false;
@@ -417,20 +418,86 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 }
             }
 
+
+            // === 第二步：处理冰冻格子下方空格（左右移动补齐） ===
+            processedSpaces.Clear(); // 清空缓存
+            for (int y = GlobalGameConfig.GridHeight - 1; y >= 0; y--)
+            {
+                for (int x = 0; x < GlobalGameConfig.GridWidth; x++)
+                {
+                    Block currentBlock = GetBlockByIndex(x, y);
+                    if (currentBlock == null || currentBlock.BlockState != BlockState.Freeze) continue;
+
+                    // 检测冰冻格子正下方是否为空
+                    int belowY = y + 1;
+                    Vector2Int space = new Vector2Int(x, belowY);
+                    if (belowY >= GlobalGameConfig.GridHeight ||
+                        !CheckItemDrop(currentBlock.m_x,currentBlock.m_y) ||
+                        processedSpaces.Contains(space))
+                    {
+                        continue; // 跳过已处理或非空格
+                    }
+
+                    // 优先尝试左侧，若失败再尝试右侧（避免同时移动）
+                    bool moved = TryMoveFromDirection(space.x, space.y, -1); // 向左搜索
+                    if (!moved)
+                    {
+                        moved = TryMoveFromDirection(space.x, space.y, 1); // 向右搜索
+                    }
+
+                    if (moved)
+                    {
+                        processedSpaces.Add(space); // 标记该空格已处理
+                        hasDropped = true;
+                        break; // 处理完一个空格后立即跳出，避免同一空格被多次处理
+                    }
+                }
+            }
+
             Debug.LogError(string.Format("检测步数{0}", maxFallSteps));
         }
         while (hasDropped && maxFallSteps > 0); // 持续检测直到没有下落或达到最大步数
 
+        //检测冰冻格子下方是否空格
 
         TimeTask createTime = new TimeTask()
         {
             id = 1,
-            taskTime = 0.3f,
+            taskTime = 0.7f,
             onCompleted = this.CreateNewBlock
         };
         TimeTaskSystem.Instance.AddTimeTask(createTime);
 
     }
+
+
+    // <summary>
+    /// 从指定方向（左/右）搜索可移动的方块并移动到目标位置
+    /// </summary>
+    /// <param name="targetX">目标位置的x坐标</param>
+    /// <param name="targetY">目标位置的y坐标</param>
+    /// <param name="direction">搜索方向（-1=左，1=右）</param>
+    /// <returns>是否成功移动</returns>
+    private bool TryMoveFromDirection(int targetX, int targetY, int direction)
+    {
+        int searchX = targetX + direction;
+        while (searchX >= 0 && searchX < GlobalGameConfig.GridWidth)
+        {
+            // 找到第一个非空且非冰冻的方块
+            Block sourceBlock = GetBlockByIndex(searchX, targetY);
+            if (sourceBlock != null && sourceBlock.BlockState != BlockState.Freeze)
+            {
+                // 移动方块到目标位置
+                DelBlockByIndex(searchX, targetY);
+                sourceBlock.UpdatePos(targetX, targetY, true);
+                mAllBlocks[targetX][targetY] = sourceBlock.GetGameObject();
+                return true;
+            }
+            searchX += direction; // 继续沿方向搜索
+        }
+        return false;
+    }
+
 
     public int BlockDropPos(Block block, Dictionary<int, int> stageMap)
     {

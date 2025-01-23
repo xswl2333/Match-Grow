@@ -140,7 +140,14 @@ public class Block : Entity<Block>
 
     }
 
-    public void UpdatePos(int targetPosX, int targetPoxY, bool dotween = false)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="targetPosX"></param>
+    /// <param name="targetPoxY"></param>
+    /// <param name="dotween"></param>
+    /// <param name="fallTime"></param>
+    public void UpdatePos(int targetPosX, int targetPoxY, bool dotween = false,float fallTime = 0.3f)
     {
 
         this.m_x = targetPosX;
@@ -149,8 +156,7 @@ public class Block : Entity<Block>
         Vector3 targetPos = CalculationTool.BlockCoverPos(this.m_x, this.m_y);
         if (dotween)
         {
-            // 0.3秒移动到目标点
-            transform.DOLocalMove(targetPos, 0.3f);
+            transform.DOLocalMove(targetPos, fallTime);
         }
         else
         {
