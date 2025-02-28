@@ -1,4 +1,4 @@
-using Markdig.Syntax;
+ï»¿using Markdig.Syntax;
 using QFramework;
 using System.Collections.Generic;
 using UnityEditor.PackageManager;
@@ -75,7 +75,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 for (int j = 0; j < heights; j++)
                 {
                     Vector3 pos = CalculationTool.BlockCoverPos(i, j);
-                    Vector3 localPos = this.parentTransform.TransformPoint(pos);//×ª»»Ïà¶Ô×ø±ê
+                    Vector3 localPos = this.parentTransform.TransformPoint(pos);//è½¬æ¢ç›¸å¯¹åæ ‡
                     GameObject block = mResLoader.LoadSync<GameObject>("Block").Instantiate(localPos, Quaternion.identity, this.parentTransform);
 
                     int iEnum = Random.Range(0, 7);
@@ -95,7 +95,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 for (int j = 0; j < heights; j++)
                 {
                     Vector3 pos = CalculationTool.BlockCoverPos(i, j);
-                    Vector3 localPos = this.parentTransform.TransformPoint(pos);//×ª»»Ïà¶Ô×ø±ê
+                    Vector3 localPos = this.parentTransform.TransformPoint(pos);//è½¬æ¢ç›¸å¯¹åæ ‡
                     GameObject block = mResLoader.LoadSync<GameObject>("Block").Instantiate(localPos, Quaternion.identity, this.parentTransform);
 
                     int iEnum = Random.Range(0, 7);
@@ -115,22 +115,22 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     private void MatchAllBlock()
     {
-        //ÓĞÏû³ı
+        //æœ‰æ¶ˆé™¤
         bool hasBoom = false;
 
         foreach (var blockList in mAllBlocks)
         {
-            for (int i = 0; i < blockList.Count; i++) //foreach±éÀú,ÔªËØÎª¿Õ,±¨´í
+            for (int i = 0; i < blockList.Count; i++) //foreachéå†,å…ƒç´ ä¸ºç©º,æŠ¥é”™
             {
                 var blockObject = blockList[i];
                 if (blockObject)
                 {
                     Block block = blockObject.GetComponent<Block>();
 
-                    //Ö¸¶¨Î»ÖÃµÄItem´æÔÚ£¬ÇÒÃ»ÓĞ±»¼ì²â¹ı
+                    //æŒ‡å®šä½ç½®çš„Itemå­˜åœ¨ï¼Œä¸”æ²¡æœ‰è¢«æ£€æµ‹è¿‡
                     if (!block.hasCheck)
                     {
-                        //¼ì²âÖÜÎ§µÄÏû³ı
+                        //æ£€æµ‹å‘¨å›´çš„æ¶ˆé™¤
                         block.CheckAroundBoom();
                         if (matchList.Count > 0)
                         {
@@ -144,7 +144,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         }
         if (!hasBoom)
         {
-            //²Ù×÷½áÊø
+            //æ“ä½œç»“æŸ
             isOperation = false;
         }
 
@@ -193,7 +193,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     }
 
-    //½»»»Î»ÖÃ
+    //äº¤æ¢ä½ç½®
     private int Exchange()
     {
         int res = 1;
@@ -206,12 +206,12 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
         if (!CheckAroundBlock(lastBlock, currentBlock))
         {
-            res = 2;//²»ÊÇÏàÁÚ¸ñ×Ó
+            res = 2;//ä¸æ˜¯ç›¸é‚»æ ¼å­
             return res;
         }
         //if (!CheckBlockState(lastBlock, currentBlock))
         //{
-        //    res = 3;//¸ñ×ÓÉÏÓĞslime
+        //    res = 3;//æ ¼å­ä¸Šæœ‰slime
         //    return res;
         //}
 
@@ -253,71 +253,71 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         this.ClearData();
         this.CheckSameBlockList(currentBlock);
 
-        //¼ÆÊıÆ÷
+        //è®¡æ•°å™¨
         int rowCount = 0;
         int columnCount = 0;
-        //ÁÙÊ±ÁĞ±í
+        //ä¸´æ—¶åˆ—è¡¨
         List<Block> rowTempList = new List<Block>();
         List<Block> columnTempList = new List<Block>();
 
-        ///ºáÏò×İÏò¼ì²â
+        ///æ¨ªå‘çºµå‘æ£€æµ‹
         foreach (var item in sameItemsList)
         {
 
-            //Èç¹ûÔÚÍ¬Ò»ĞĞ
+            //å¦‚æœåœ¨åŒä¸€è¡Œ
             if (item.m_x == currentBlock.m_x)
             {
-                //ÅĞ¶Ï¸ÃµãÓëCurrenÖĞ¼äÓĞÎŞ¼äÏ¶
+                //åˆ¤æ–­è¯¥ç‚¹ä¸Currenä¸­é—´æœ‰æ— é—´éš™
                 bool rowCanBoom = CheckItemsInterval(true, currentBlock, item);
                 if (rowCanBoom)
                 {
-                    //¼ÆÊı
+                    //è®¡æ•°
                     rowCount++;
-                    //Ìí¼Óµ½ĞĞÁÙÊ±ÁĞ±í
+                    //æ·»åŠ åˆ°è¡Œä¸´æ—¶åˆ—è¡¨
                     rowTempList.Add(item);
                 }
             }
-            //Èç¹ûÔÚÍ¬Ò»ÁĞ
+            //å¦‚æœåœ¨åŒä¸€åˆ—
             if (item.m_y == currentBlock.m_y)
             {
-                //ÅĞ¶Ï¸ÃµãÓëCurrenÖĞ¼äÓĞÎŞ¼äÏ¶
+                //åˆ¤æ–­è¯¥ç‚¹ä¸Currenä¸­é—´æœ‰æ— é—´éš™
                 bool columnCanBoom = CheckItemsInterval(false, currentBlock, item);
                 if (columnCanBoom)
                 {
-                    //¼ÆÊı
+                    //è®¡æ•°
                     columnCount++;
-                    //Ìí¼Óµ½ÁĞÁÙÊ±ÁĞ±í
+                    //æ·»åŠ åˆ°åˆ—ä¸´æ—¶åˆ—è¡¨
                     columnTempList.Add(item);
                 }
             }
         }
-        //ºáÏòÏû³ı
+        //æ¨ªå‘æ¶ˆé™¤
         bool horizontalBoom = false;
-        //Èç¹ûºáÏòÈı¸öÒÔÉÏ
+        //å¦‚æœæ¨ªå‘ä¸‰ä¸ªä»¥ä¸Š
         if (rowCount > 2)
         {
-            //½«ÁÙÊ±ÁĞ±íÖĞµÄItemÈ«²¿·ÅÈëBoomList
+            //å°†ä¸´æ—¶åˆ—è¡¨ä¸­çš„Itemå…¨éƒ¨æ”¾å…¥BoomList
             matchList.AddRange(rowTempList);
-            //ºáÏòÏû³ı
+            //æ¨ªå‘æ¶ˆé™¤
             horizontalBoom = true;
         }
-        //Èç¹û×İÏòÈı¸öÒÔÉÏ
+        //å¦‚æœçºµå‘ä¸‰ä¸ªä»¥ä¸Š
         if (columnCount > 2)
         {
             if (horizontalBoom)
             {
-                //ÌŞ³ı×Ô¼º
+                //å‰”é™¤è‡ªå·±
                 matchList.Remove(currentBlock);
             }
-            //½«ÁÙÊ±ÁĞ±íÖĞµÄItemÈ«²¿·ÅÈëBoomList
+            //å°†ä¸´æ—¶åˆ—è¡¨ä¸­çš„Itemå…¨éƒ¨æ”¾å…¥BoomList
             matchList.AddRange(columnTempList);
         }
-        //Èç¹ûÃ»ÓĞÏû³ı¶ÔÏó£¬·µ»Ø
+        //å¦‚æœæ²¡æœ‰æ¶ˆé™¤å¯¹è±¡ï¼Œè¿”å›
         if (matchList.Count == 0)
             return;
-        //´´½¨ÁÙÊ±µÄBoomList
+        //åˆ›å»ºä¸´æ—¶çš„BoomList
         List<Block> tempBoomList = new List<Block>();
-        //×ªÒÆµ½ÁÙÊ±ÁĞ±í
+        //è½¬ç§»åˆ°ä¸´æ—¶åˆ—è¡¨
         tempBoomList.AddRange(matchList);
         HandleMatchList(tempBoomList);
     }
@@ -325,20 +325,20 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     private void CheckSameBlockList(Block currentBlock)
     {
-        //Èç¹ûÒÑ´æÔÚ£¬Ìø¹ı
+        //å¦‚æœå·²å­˜åœ¨ï¼Œè·³è¿‡
         if (sameItemsList.Contains(currentBlock))
             return;
         if (currentBlock.BlockState == BlockState.Freeze)
             return;
 
-        //Ìí¼Óµ½ÁĞ±í
+        //æ·»åŠ åˆ°åˆ—è¡¨
         sameItemsList.Add(currentBlock);
-        //ÉÏÏÂ×óÓÒµÄItem
+        //ä¸Šä¸‹å·¦å³çš„Item
         Block[] tempItemList = GetArounBlocks(currentBlock);
 
         for (int i = 0; i < tempItemList.Length; i++)
         {
-            //Èç¹ûItem²»ºÏ·¨£¬Ìø¹ı
+            //å¦‚æœItemä¸åˆæ³•ï¼Œè·³è¿‡
             if (tempItemList[i] == null)
                 continue;
             if (currentBlock.BlockType == tempItemList[i].BlockType)
@@ -355,13 +355,13 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         {
             block.hasCheck = true;
             //block.GetComponent<Image>(). = randomColor * 2;
-            ////Àë¿ª¶¯»­
+            ////ç¦»å¼€åŠ¨ç”»
             //AudioManager.instance.PlayMagicalAudio();
-            //½«±»Ïû³ıµÄItemÔÚÈ«¾ÖÁĞ±íÖĞÒÆ³ı
+            //å°†è¢«æ¶ˆé™¤çš„Itemåœ¨å…¨å±€åˆ—è¡¨ä¸­ç§»é™¤
             DelBlockByIndex(block.m_x, block.m_y);
             totalBlockAmount--;
         }
-        //¼ì²âItemÊÇ·ñÒÑ¾­¿ª·¢²¥·ÅÀë¿ª¶¯»­
+        //æ£€æµ‹Itemæ˜¯å¦å·²ç»å¼€å‘æ’­æ”¾ç¦»å¼€åŠ¨ç”»
         //while (!tempBoomList[0].GetComponent<AnimatedButton>().CheckPlayExit())
         //{
         //    yield return 0;
@@ -381,24 +381,24 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     private void BlocksDrop()
     {
-        //TODO È±ÉÙ¼¼ÄÜµã¹æÔò
+        //TODO ç¼ºå°‘æŠ€èƒ½ç‚¹è§„åˆ™
         this.GetModel<IGameModel>().SkillPoint.Value++;
         this.matchState = MatchState.BlocksDrop;
         isOperation = true;
 
         bool hasDropped;
-        int maxFallSteps = totalBlockAmount ;//ÏÂÂäÒÆ¶¯µÄ²½Êı
+        int maxFallSteps = totalBlockAmount ;//ä¸‹è½ç§»åŠ¨çš„æ­¥æ•°
 
         HashSet<Vector2Int> processedSpaces = new HashSet<Vector2Int>();
         do
         {
             hasDropped = false;
-            maxFallSteps--; // ¹Ø¼üĞŞ¸´£ºµİ¼õ¼ÆÊıÆ÷
+            maxFallSteps--; // å…³é”®ä¿®å¤ï¼šé€’å‡è®¡æ•°å™¨
 
-            // ´Óµ¹ÊıµÚ¶şĞĞ¿ªÊ¼¼ì²â£¨×îµ×²ã²»ĞèÒª¼ì²â£©
+            // ä»å€’æ•°ç¬¬äºŒè¡Œå¼€å§‹æ£€æµ‹ï¼ˆæœ€åº•å±‚ä¸éœ€è¦æ£€æµ‹ï¼‰
             for (int y = GlobalGameConfig.GridHeight - 1; y >= 0; y--)
             {
-                // ÖğÁĞ¼ì²â
+                // é€åˆ—æ£€æµ‹
                 for (int x = 0; x < GlobalGameConfig.GridWidth; x++)
                 {
                     Block currentBlock = GetBlockByIndex(x, y);
@@ -406,10 +406,10 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                     if (currentBlock.BlockState == BlockState.Freeze) continue;
 
                     bool res = CheckItemDrop(x, y);
-                    // ¼ì²âÏÂ·½ÊÇ·ñÎª¿Õ
+                    // æ£€æµ‹ä¸‹æ–¹æ˜¯å¦ä¸ºç©º
                     if (res)
                     {
-                        // Ö´ĞĞµ¥¸ñÏÂÂä
+                        // æ‰§è¡Œå•æ ¼ä¸‹è½
                         DelBlockByIndex(currentBlock.m_x, currentBlock.m_y);
                         currentBlock.UpdatePos(currentBlock.m_x, y + 1, true);
                         mAllBlocks[currentBlock.m_x][currentBlock.m_y] = currentBlock.GetGameObject();
@@ -419,8 +419,8 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             }
 
 
-            // === µÚ¶ş²½£º´¦Àí±ù¶³¸ñ×ÓÏÂ·½¿Õ¸ñ£¨×óÓÒÒÆ¶¯²¹Æë£© ===
-            processedSpaces.Clear(); // Çå¿Õ»º´æ
+            // === ç¬¬äºŒæ­¥ï¼šå¤„ç†å†°å†»æ ¼å­ä¸‹æ–¹ç©ºæ ¼ï¼ˆå·¦å³ç§»åŠ¨è¡¥é½ï¼‰ ===
+            processedSpaces.Clear(); // æ¸…ç©ºç¼“å­˜
             for (int y = GlobalGameConfig.GridHeight - 1; y >= 0; y--)
             {
                 for (int x = 0; x < GlobalGameConfig.GridWidth; x++)
@@ -428,37 +428,37 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                     Block currentBlock = GetBlockByIndex(x, y);
                     if (currentBlock == null || currentBlock.BlockState != BlockState.Freeze) continue;
 
-                    // ¼ì²â±ù¶³¸ñ×ÓÕıÏÂ·½ÊÇ·ñÎª¿Õ
+                    // æ£€æµ‹å†°å†»æ ¼å­æ­£ä¸‹æ–¹æ˜¯å¦ä¸ºç©º
                     int belowY = y + 1;
                     Vector2Int space = new Vector2Int(x, belowY);
                     if (belowY >= GlobalGameConfig.GridHeight ||
                         !CheckItemDrop(currentBlock.m_x,currentBlock.m_y) ||
                         processedSpaces.Contains(space))
                     {
-                        continue; // Ìø¹ıÒÑ´¦Àí»ò·Ç¿Õ¸ñ
+                        continue; // è·³è¿‡å·²å¤„ç†æˆ–éç©ºæ ¼
                     }
 
-                    // ÓÅÏÈ³¢ÊÔ×ó²à£¬ÈôÊ§°ÜÔÙ³¢ÊÔÓÒ²à£¨±ÜÃâÍ¬Ê±ÒÆ¶¯£©
-                    bool moved = TryMoveFromDirection(space.x, space.y, -1); // Ïò×óËÑË÷
+                    // ä¼˜å…ˆå°è¯•å·¦ä¾§ï¼Œè‹¥å¤±è´¥å†å°è¯•å³ä¾§ï¼ˆé¿å…åŒæ—¶ç§»åŠ¨ï¼‰
+                    bool moved = TryMoveFromDirection(space.x, space.y, -1); // å‘å·¦æœç´¢
                     if (!moved)
                     {
-                        moved = TryMoveFromDirection(space.x, space.y, 1); // ÏòÓÒËÑË÷
+                        moved = TryMoveFromDirection(space.x, space.y, 1); // å‘å³æœç´¢
                     }
 
                     if (moved)
                     {
-                        processedSpaces.Add(space); // ±ê¼Ç¸Ã¿Õ¸ñÒÑ´¦Àí
+                        processedSpaces.Add(space); // æ ‡è®°è¯¥ç©ºæ ¼å·²å¤„ç†
                         hasDropped = true;
-                        break; // ´¦ÀíÍêÒ»¸ö¿Õ¸ñºóÁ¢¼´Ìø³ö£¬±ÜÃâÍ¬Ò»¿Õ¸ñ±»¶à´Î´¦Àí
+                        break; // å¤„ç†å®Œä¸€ä¸ªç©ºæ ¼åç«‹å³è·³å‡ºï¼Œé¿å…åŒä¸€ç©ºæ ¼è¢«å¤šæ¬¡å¤„ç†
                     }
                 }
             }
 
-            Debug.LogError(string.Format("¼ì²â²½Êı{0}", maxFallSteps));
+            Debug.LogError(string.Format("æ£€æµ‹æ­¥æ•°{0}", maxFallSteps));
         }
-        while (hasDropped && maxFallSteps > 0); // ³ÖĞø¼ì²âÖ±µ½Ã»ÓĞÏÂÂä»ò´ïµ½×î´ó²½Êı
+        while (hasDropped && maxFallSteps > 0); // æŒç»­æ£€æµ‹ç›´åˆ°æ²¡æœ‰ä¸‹è½æˆ–è¾¾åˆ°æœ€å¤§æ­¥æ•°
 
-        //¼ì²â±ù¶³¸ñ×ÓÏÂ·½ÊÇ·ñ¿Õ¸ñ
+        //æ£€æµ‹å†°å†»æ ¼å­ä¸‹æ–¹æ˜¯å¦ç©ºæ ¼
 
         TimeTask createTime = new TimeTask()
         {
@@ -472,28 +472,28 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
 
     // <summary>
-    /// ´ÓÖ¸¶¨·½Ïò£¨×ó/ÓÒ£©ËÑË÷¿ÉÒÆ¶¯µÄ·½¿é²¢ÒÆ¶¯µ½Ä¿±êÎ»ÖÃ
+    /// ä»æŒ‡å®šæ–¹å‘ï¼ˆå·¦/å³ï¼‰æœç´¢å¯ç§»åŠ¨çš„æ–¹å—å¹¶ç§»åŠ¨åˆ°ç›®æ ‡ä½ç½®
     /// </summary>
-    /// <param name="targetX">Ä¿±êÎ»ÖÃµÄx×ø±ê</param>
-    /// <param name="targetY">Ä¿±êÎ»ÖÃµÄy×ø±ê</param>
-    /// <param name="direction">ËÑË÷·½Ïò£¨-1=×ó£¬1=ÓÒ£©</param>
-    /// <returns>ÊÇ·ñ³É¹¦ÒÆ¶¯</returns>
+    /// <param name="targetX">ç›®æ ‡ä½ç½®çš„xåæ ‡</param>
+    /// <param name="targetY">ç›®æ ‡ä½ç½®çš„yåæ ‡</param>
+    /// <param name="direction">æœç´¢æ–¹å‘ï¼ˆ-1=å·¦ï¼Œ1=å³ï¼‰</param>
+    /// <returns>æ˜¯å¦æˆåŠŸç§»åŠ¨</returns>
     private bool TryMoveFromDirection(int targetX, int targetY, int direction)
     {
         int searchX = targetX + direction;
         while (searchX >= 0 && searchX < GlobalGameConfig.GridWidth)
         {
-            // ÕÒµ½µÚÒ»¸ö·Ç¿ÕÇÒ·Ç±ù¶³µÄ·½¿é
+            // æ‰¾åˆ°ç¬¬ä¸€ä¸ªéç©ºä¸”éå†°å†»çš„æ–¹å—
             Block sourceBlock = GetBlockByIndex(searchX, targetY);
             if (sourceBlock != null && sourceBlock.BlockState != BlockState.Freeze)
             {
-                // ÒÆ¶¯·½¿éµ½Ä¿±êÎ»ÖÃ
+                // ç§»åŠ¨æ–¹å—åˆ°ç›®æ ‡ä½ç½®
                 DelBlockByIndex(searchX, targetY);
                 sourceBlock.UpdatePos(targetX, targetY, true);
                 mAllBlocks[targetX][targetY] = sourceBlock.GetGameObject();
                 return true;
             }
-            searchX += direction; // ¼ÌĞøÑØ·½ÏòËÑË÷
+            searchX += direction; // ç»§ç»­æ²¿æ–¹å‘æœç´¢
         }
         return false;
     }
@@ -506,15 +506,15 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         int MaxY = GlobalGameConfig.GridWidth;
         foreach (var kvp in stageMap)
         {
-            int key = kvp.Key;   // ½×¶ÎµÄÆğÊ¼Öµ
-            int value = kvp.Value; // ½×¶ÎµÄ½áÊøÖµ
+            int key = kvp.Key;   // é˜¶æ®µçš„èµ·å§‹å€¼
+            int value = kvp.Value; // é˜¶æ®µçš„ç»“æŸå€¼
 
-            // ¼ì²éÊÇ·ñÂú×ã key < m_y < value
+            // æ£€æŸ¥æ˜¯å¦æ»¡è¶³ key < m_y < value
             if (block.m_y >= key && block.m_y <= value)
             {
                 MinY = key;
                 MaxY = value;
-                break; // ÕÒµ½ºóÁ¢¼´ÍË³öÑ­»·
+                break; // æ‰¾åˆ°åç«‹å³é€€å‡ºå¾ªç¯
             }
         }
 
@@ -588,31 +588,31 @@ public class MatchSystem : AbstractSystem, IMatchSystem
 
     private bool CheckItemsInterval(bool isHorizontal, Block begin, Block end)
     {
-        //»ñÈ¡Í¼°¸
+        //è·å–å›¾æ¡ˆ
         BlockType type = begin.BlockType;
-        //Èç¹ûÊÇºáÏò
+        //å¦‚æœæ˜¯æ¨ªå‘
         if (isHorizontal)
         {
-            //ÆğµãÖÕµãÁĞºÅ
+            //èµ·ç‚¹ç»ˆç‚¹åˆ—å·
             int beginIndex = begin.m_y;
             int endIndex = end.m_y;
-            //Èç¹ûÆğµãÔÚÓÒ£¬½»»»ÆğµãÖÕµãÁĞºÅ
+            //å¦‚æœèµ·ç‚¹åœ¨å³ï¼Œäº¤æ¢èµ·ç‚¹ç»ˆç‚¹åˆ—å·
             if (beginIndex > endIndex)
             {
                 beginIndex = end.m_y;
                 endIndex = begin.m_y;
             }
-            //±éÀúÖĞ¼äµÄItem
+            //éå†ä¸­é—´çš„Item
             for (int i = beginIndex + 1; i < endIndex; i++)
             {
                 Block checkBlock = GetBlockByIndex(begin.m_x, i);
-                //Òì³£´¦Àí£¨ÖĞ¼äÎ´Éú³É£¬±êÊ¶Îª²»ºÏ·¨£©
+                //å¼‚å¸¸å¤„ç†ï¼ˆä¸­é—´æœªç”Ÿæˆï¼Œæ ‡è¯†ä¸ºä¸åˆæ³•ï¼‰
                 if (checkBlock == null)
                     return false;
-                //¶³½áÎŞ·¨½»»»
+                //å†»ç»“æ— æ³•äº¤æ¢
                 if (checkBlock.BlockState == BlockState.Freeze)
                     return false;
-                //Èç¹ûÖĞ¼äÓĞ¼äÏ¶£¨ÓĞÍ¼°¸²»Ò»ÖÂµÄ£©
+                //å¦‚æœä¸­é—´æœ‰é—´éš™ï¼ˆæœ‰å›¾æ¡ˆä¸ä¸€è‡´çš„ï¼‰
                 if (checkBlock.BlockType != type)
                 {
                     return false;
@@ -622,16 +622,16 @@ public class MatchSystem : AbstractSystem, IMatchSystem
         }
         else
         {
-            //ÆğµãÖÕµãĞĞºÅ
+            //èµ·ç‚¹ç»ˆç‚¹è¡Œå·
             int beginIndex = begin.m_x;
             int endIndex = end.m_x;
-            //Èç¹ûÆğµãÔÚÉÏ£¬½»»»ÆğµãÖÕµãÁĞºÅ
+            //å¦‚æœèµ·ç‚¹åœ¨ä¸Šï¼Œäº¤æ¢èµ·ç‚¹ç»ˆç‚¹åˆ—å·
             if (beginIndex > endIndex)
             {
                 beginIndex = end.m_x;
                 endIndex = begin.m_x;
             }
-            //±éÀúÖĞ¼äµÄItem
+            //éå†ä¸­é—´çš„Item
             for (int i = beginIndex + 1; i < endIndex; i++)
             {
                 Block checkBlock = GetBlockByIndex(i, begin.m_y);
@@ -640,7 +640,7 @@ public class MatchSystem : AbstractSystem, IMatchSystem
                 if (checkBlock.BlockState == BlockState.Freeze)
                     return false;
 
-                //Èç¹ûÖĞ¼äÓĞ¼äÏ¶£¨ÓĞÍ¼°¸²»Ò»ÖÂµÄ£©
+                //å¦‚æœä¸­é—´æœ‰é—´éš™ï¼ˆæœ‰å›¾æ¡ˆä¸ä¸€è‡´çš„ï¼‰
                 if (checkBlock.BlockType != type)
                 {
                     return false;

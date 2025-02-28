@@ -1,4 +1,4 @@
-
+ï»¿
 public enum BlockType
 {
     Red,
@@ -13,7 +13,7 @@ public enum BlockType
 public enum BlockState
 {
     Empty,
-    Freeze,//±ù¶³
-    Universal,//ÍòÄÜ¸ñ×Ó
+    Freeze,//å†°å†»
+    Universal,//ä¸‡èƒ½æ ¼å­
     
 }

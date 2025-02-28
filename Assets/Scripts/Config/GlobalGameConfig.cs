@@ -1,4 +1,4 @@
-using System.Collections;
+锘縰sing System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,12 +6,12 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "GlobalGameConfig", menuName = "Assets/Resources/Data")]
 public class GlobalGameConfig : ScriptableObject
 {
-    //格子距离
+    //鏍煎瓙璺濈
     public const float GapWidth = 1.5f;
-    //格子数量
+    //鏍煎瓙鏁伴噺
     public const int GridWidth = 6;
     public const int GridHeight = 6;
-    //格子偏移距离
+    //鏍煎瓙鍋忕Щ璺濈
     public const float offHeight = 0.5f;
 
     public bool EditorModel = false;

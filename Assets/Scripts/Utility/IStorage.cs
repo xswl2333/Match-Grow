@@ -1,4 +1,4 @@
-using MessagePack;
+ï»¿using MessagePack;
 using QFramework;
 using System.Collections.Generic;
 using System.IO;
@@ -19,7 +19,7 @@ public class BlockDataStorage : IStorage
     {
         byte[] data = File.ReadAllBytes("Assets/Resources/Data/Block.msgpack");
 
-        // ·´ĞòÁĞ»¯Îª BlockData ÁĞ±í
+        // ååºåˆ—åŒ–ä¸º BlockData åˆ—è¡¨
         mGird = MessagePackSerializer.Deserialize<List<BlockData>>(data);
     }
 }
