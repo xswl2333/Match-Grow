@@ -1,0 +1,16 @@
+{
+    "name": "GameTool",
+    "rootNamespace": "",
+    "references": [
+        "GUID:93178ef197809ee4797f9647f08f95f3"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 using System.Collections;
 using Unity.VisualScripting;
 using MessagePack;
-using static UnityEngine.RuleTile.TilingRuleOutput;
 using UnityEngine.XR;
 using Transform = UnityEngine.Transform;
 using MoonSharp.Interpreter.IO;
@@ -544,15 +543,15 @@ public class MatchSystem : AbstractSystem, IMatchSystem
             {
                 if (GetBlockByIndex(i, j) == null)
                 {
-                    GameObject block = this.GetSystem<IBasicPoolSystem>().PopByPoolIdType(PoolIdEnum.BlockPoolId);
-                    block.GetComponent<Block>().UpdatePos(i, j, false);
+                    Block block = this.GetSystem<IBasicPoolSystem<Block>>().PopByPoolIdType();
+                    block.UpdatePos(i, j, false);
 
                     int iEnum = Random.Range(0, 7);
-                    block.GetComponent<Block>().SetBlockType((BlockType)iEnum);
+                    block.SetBlockType((BlockType)iEnum);
                     block.SetActive(true);
-                    mAllBlocks[i][j] = block;
+                    mAllBlocks[i][j] = block.GetGameObject();
 
-                    newItemQueue.Enqueue(block);
+                    newItemQueue.Enqueue(block.GetGameObject());
                     count++;
                 }
             }

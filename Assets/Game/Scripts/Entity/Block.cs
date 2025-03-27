@@ -204,14 +204,10 @@ public class Block : Entity<Block>
                 break;
         }
 
-        this.GetSystem<IBasicPoolSystem>().PushByPoolIdType(this.gameObject, PoolIdEnum.BlockPoolId);
+        this.GetSystem<IBasicPoolSystem<Block>>().PushByPoolIdType(this, PoolIdEnum.BlockPoolId);
     }
 
-    public void DestroyBlock()
-    {
-        Destroy(this.gameObject);
-    }
-
+   
     public GameObject GetGameObject()
     {
         return this.gameObject;
@@ -229,4 +225,5 @@ public class Block : Entity<Block>
         //this.m_slime = null;
         this.BlockState = BlockState.Empty;
     }
+
 }
